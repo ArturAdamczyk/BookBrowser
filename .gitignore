@@ -1,3 +1,10 @@
+*.iml
+gradle
+local.properties
+.idea
+build
+
+
 # Built application files
 *.apk
 *.ap_
