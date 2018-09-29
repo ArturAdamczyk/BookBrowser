@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:id="@+id/dialogAddBookTextViewTopLabel"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:hint="@string/add_book_dialog_top_label"
+        android:textAlignment="center"
+        android:textColor="@color/colorWhite"
+        android:textColorHighlight="@color/colorWhite"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/dialogAddBookTextViewErrorLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/dialogAddBookEditTextTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:gravity="top"
+        android:hint="@string/add_book_dialog_title_label"
+        android:maxLines="2"
+        android:maxLength="60"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/dialogAddBookEditTextCoverUrl"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialogAddBookTextViewErrorLabel" />
+
+    <EditText
+        android:id="@+id/dialogAddBookEditTextDescription"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:gravity="top"
+        android:hint="@string/add_book_dialog_description_label"
+        app:layout_constraintBottom_toTopOf="@+id/dialogAddBookButtonConfirm"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialogAddBookEditTextCoverUrl" />
+
+    <EditText
+        android:id="@+id/dialogAddBookEditTextCoverUrl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:gravity="top"
+        android:hint="@string/add_book_dialog_link_label"
+        android:maxLines="2"
+        android:maxLength="60"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/dialogAddBookEditTextDescription"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialogAddBookEditTextTitle" />
+
+    <Button
+        android:id="@+id/dialogAddBookButtonConfirm"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/ok"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/dialogAddBookButtonDiscard"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialogAddBookEditTextDescription" />
+
+    <Button
+        android:id="@+id/dialogAddBookButtonDiscard"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/cancel"
+        app:layout_constraintBottom_toBottomOf="@+id/dialogAddBookButtonConfirm"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/dialogAddBookButtonConfirm"
+        app:layout_constraintTop_toTopOf="@+id/dialogAddBookButtonConfirm"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/dialogAddBookTextViewErrorLabel"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="12dp"
+        android:textColor="@color/colorAccent"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/dialogAddBookEditTextTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialogAddBookTextViewTopLabel"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+</android.support.constraint.ConstraintLayout>

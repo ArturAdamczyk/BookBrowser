@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">BookBrowser</string>
+    <string name="book_browser_empty_label">Book browser is empty..</string>
+    <string name="book_details_empty_label">Oops! Something went wrong.. :(</string>
+    <string name="add_label">Add</string>
+    <string name="cancel_label">Cancel</string>
+
+    <string name="dialog_add_book_fields_cannot_be_empty">Fields title and description cannot be empty!</string>
+    <string name="dialog_add_book_field_title_cannot_be_empty">Field title cannot be empty!</string>
+    <string name="dialog_add_book_field_description_cannot_be_empty">Field description cannot be empty!</string>
+    <string name="web_service_bad_address">Bad web service url!</string>
+
+    <string name="login_success">Login successful</string>
+    <string name="login_failure">Login unsuccessful :(</string>
+    <string name="book_details_fetch_success">Book details fetched successfully</string>
+    <string name="book_details_fetch_failure">Book details fetched unsuccessfully :(</string>
+    <string name="books_fetch_success">Books fetched successfully</string>
+    <string name="books_fetch_failure">Books fetched unsuccessfully :(</string>
+    <string name="add_book_success">Book added successfully</string>
+    <string name="add_book_failure">Book added unsuccessfully :(</string>
+    <string name="delete_book_success">Book deleted successfully</string>
+    <string name="delete_book_failure">Book deleted unsuccessfully :(</string>
+
+    <string name="add_book_dialog_link_label">Cover URL:</string>
+    <string name="add_book_dialog_description_label">Description:</string>
+    <string name="add_book_dialog_title_label">Title:</string>
+    <string name="add_book_dialog_top_label">Add Book</string>
+
+    <string name="book_details_title_label">Title:</string>
+    <string name="book_details_description_label">Description:</string>
+</resources>
