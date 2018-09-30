@@ -1,5 +1,6 @@
 package com.art.bookbrowser.activities;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -15,27 +16,22 @@ import com.art.bookbrowser.adapters.BookListAdapter;
 import com.art.bookbrowser.base.BaseActivity;
 import com.art.bookbrowser.di.ActivityModule;
 import com.art.bookbrowser.dialogs.AddBookDialog;
-import com.art.bookbrowser.interfaces.Repository;
 import com.art.bookbrowser.models.Book;
 import com.art.bookbrowser.models.InternetConnectionEvent;
 import com.art.bookbrowser.params.Params;
+import com.art.bookbrowser.viewmodels.BookBrowserViewModel;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
-import javax.inject.Inject;
-
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
-public class BookBrowserActivity extends BaseActivity {
+public class BookBrowserActivity extends BaseActivity<BookBrowserViewModel> {
 
     @BindView(R.id.bookBrowserTextViewErrorLabel)
     TextView bookBrowserTextViewErrorLabel;
@@ -46,45 +42,21 @@ public class BookBrowserActivity extends BaseActivity {
     @BindView(R.id.bookBrowserParentLayout)
     CoordinatorLayout bookBrowserParentLayout;
 
-    @Inject
-    protected Repository repository;
     private BookListAdapter bookListAdapter;
     private AddBookDialog addBookDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_browser);
+        super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
-        ButterKnife.bind(this);
         initUI();
-        getData();
-    }
-
-    @Override
-    protected void onStop(){
-        super.onStop();
-        disposables.clear();
+        viewModel.getData();
     }
 
     @OnClick(R.id.bookBrowserFab)
     public void onViewClicked() {
         openAddBookDialog();
-    }
-
-    private void getData(){
-        disposables.add(repository.getBooks()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    response -> {
-                        passMessage(getResources().getString(R.string.books_fetch_success),
-                                getResources().getString(R.string.books_fetch_success));
-                        refreshUI((ArrayList) response);
-                    }, throwable -> passMessage(throwable.getLocalizedMessage(),
-                                getResources().getString(R.string.books_fetch_failure))
-                )
-        );
     }
 
     private void initUI(){
@@ -99,13 +71,13 @@ public class BookBrowserActivity extends BaseActivity {
 
             @Override
             public void onItemLongClick(Book book, View view) {
-                deleteBook(book);
+                viewModel.deleteBook(book);
             }
         });
         bookBrowserRecyclerView.setAdapter(bookListAdapter);
     }
 
-    private void refreshUI(ArrayList<Book> bookList){
+    private void refreshUI(List<Book> bookList){
         if(bookList.isEmpty()){
             bookBrowserTextViewErrorLabel.setVisibility(View.VISIBLE);
         }else{
@@ -120,46 +92,15 @@ public class BookBrowserActivity extends BaseActivity {
     }
 
     private void openAddBookDialog() {
-        addBookDialog = new AddBookDialog(book -> addBook(book), this);
+        addBookDialog = new AddBookDialog(book -> viewModel.addBook(book), this);
         addBookDialog.showDialog(false);
     }
 
-    private void addBook(Book book){
-        disposables.add(repository.addBook(book)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    response -> {
-                        passMessage(getResources().getString(R.string.add_book_success),
-                                getResources().getString(R.string.add_book_success));
-                        closeDialog();
-                        getData();
-                    }, throwable -> {
-                        Optional.ofNullable(addBookDialog)
-                                .ifPresent(addBookDialog1 -> addBookDialog.passErrorMessage(getResources().getString(R.string.add_book_failure)));
-                        passMessage(throwable.getLocalizedMessage(),
-                                getResources().getString(R.string.add_book_failure));
-                    }));
-    }
 
-    private void deleteBook(Book book){
-        disposables.add(repository.deleteBook(book.getId())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    response -> {
-                        passMessage(getResources().getString(R.string.delete_book_success),
-                                getResources().getString(R.string.delete_book_success));
-                        bookListAdapter.deleteBook(book);
-                    }, throwable ->
-                        passMessage(throwable.getLocalizedMessage(),
-                                getResources().getString(R.string.delete_book_failure))
-                    ));
-    }
 
     private void goToBookDetailsActivity(Book book) {
         intentManager.getIntentExtras().putString(Params.BOOK_ID, book.getId());
-        goToNextActivity(BookDetailsActivity.class);
+        openActivity(BookDetailsActivity.class);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -167,7 +108,7 @@ public class BookBrowserActivity extends BaseActivity {
         if(event.isInternetAvailable()){
             Optional.ofNullable(bookListAdapter).ifPresent(bookListAdapter -> {
                 if(bookListAdapter.getBookList().isEmpty()){
-                    getData();
+                    viewModel.getData();
                 }
             });
         }
@@ -178,5 +119,23 @@ public class BookBrowserActivity extends BaseActivity {
         App.appComponent
                 .getActivityComponent(new ActivityModule(this))
                 .inject(this);
+    }
+
+    @Override
+    public void initViewModel(){
+        viewModel = ViewModelProviders
+                .of(this, baseViewModelFactory)
+                .get(BookBrowserViewModel.class);
+        viewModel.getBooks().observe(this, books -> refreshUI(books));
+        viewModel.getBook().observe(this, book -> closeDialog());
+        viewModel.getDeleteBook().observe(this, book -> bookListAdapter.deleteBook(book));
+        viewModel.getPassMessage().observe(this, msg -> {
+            if(msg.equals(getString(R.string.add_book_failure))){
+                Optional.ofNullable(addBookDialog)
+                        .ifPresent(addBookDialog1 ->
+                                addBookDialog.passErrorMessage(
+                                        getResources().getString(R.string.add_book_failure)));
+            }
+        });
     }
 }
