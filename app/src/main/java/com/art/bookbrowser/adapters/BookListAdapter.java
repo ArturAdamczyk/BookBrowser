@@ -11,12 +11,13 @@ import com.art.bookbrowser.models.Book;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHolder> {
-    private ArrayList<Book> bookList = new ArrayList();
+    private List<Book> bookList = new ArrayList();
     private ClickListenerCallback callback;
 
     public interface ClickListenerCallback {
@@ -28,7 +29,7 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
         this.callback = callback;
     }
 
-    public void setData(ArrayList<Book> bookList){
+    public void setData(List<Book> bookList){
         this.bookList = bookList;
         sortData();
         notifyDataSetChanged();
@@ -44,7 +45,7 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
         notifyDataSetChanged();
     }
 
-    public ArrayList<Book> getBookList() {
+    public List<Book> getBookList() {
         return bookList;
     }
 

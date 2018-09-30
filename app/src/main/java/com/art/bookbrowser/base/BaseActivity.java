@@ -16,22 +16,30 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import io.reactivex.disposables.CompositeDisposable;
 
-public abstract class BaseActivity extends AppCompatActivity implements UiInteraction, ActivityContract {
+public abstract class BaseActivity<T extends BaseViewModel> extends AppCompatActivity implements UiInteraction, ActivityContract {
     private final String CLASS_TAG = this.getClass().getName();
-    protected CompositeDisposable disposables = new CompositeDisposable();
+
+    private ProgressDialog progressDialog;
     @Inject
     protected Messenger messenger;
     @Inject
     protected IntentManager intentManager;
-    private ProgressDialog progressDialog;
+    @Inject
+    protected ViewModelFactory baseViewModelFactory;
+    protected T viewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        injectDependencies();
         ButterKnife.bind(this);
+        injectDependencies();
+        initViewModel();
+        viewModel.getShowMessage().observe(this, it -> showMessage(it));
+        viewModel.getLogMessage().observe(this, it -> logMessage(it));
+        viewModel.getPassMessage().observe(this, it -> passMessage(it));
+        viewModel.getShowProgress().observe(this, it -> showProgress(it));
+        viewModel.getHideProgress().observe(this, it -> hideProgress());
     }
 
     @Override
@@ -89,12 +97,7 @@ public abstract class BaseActivity extends AppCompatActivity implements UiIntera
     }
 
     @Override
-    protected void onDestroy() {
-        disposables.dispose();
-        super.onDestroy();
-    }
-
-    public void goToNextActivity(Class targetActivity){
+    public void openActivity(Class targetActivity) {
         startActivity(intentManager.feedIntent(new Intent(this, targetActivity)));
     }
 }
