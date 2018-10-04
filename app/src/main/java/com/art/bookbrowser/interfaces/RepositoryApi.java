@@ -6,12 +6,12 @@ import java.util.List;
 
 import io.reactivex.Single;
 
-public interface Repository {
+public interface RepositoryApi {
     Single<Book> getBook(String bookId);
 
-    Single<Book> addBook(Book book);
+    Single<Boolean> addBook(Book book);
 
-    Single<Boolean> deleteBook(String bookId);
+    Single<Boolean> deleteBook(Book book);
 
     Single<List<Book>> getBooks();
 

@@ -19,4 +19,10 @@ class RxUtils @Inject constructor(){
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
     }
+
+    fun <T> Single<T>.backgroundCall(): Single<T> {
+        return this
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.computation())
+    }
 }

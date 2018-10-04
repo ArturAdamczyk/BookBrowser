@@ -7,14 +7,14 @@ import com.art.bookbrowser.R;
 import com.art.bookbrowser.base.BaseViewModel;
 import com.art.bookbrowser.helpers.RestApiFactory;
 import com.art.bookbrowser.helpers.RxUtils;
-import com.art.bookbrowser.interfaces.Repository;
+import com.art.bookbrowser.interfaces.RepositoryApi;
 
 import javax.inject.Inject;
 
 import lombok.Getter;
 
 public class LoginViewModel extends BaseViewModel {
-    private Repository repository;
+    private RepositoryApi repositoryApi;
     private RxUtils rxUtils;
 
     @Getter
@@ -22,11 +22,11 @@ public class LoginViewModel extends BaseViewModel {
 
     @Inject
     LoginViewModel(Application app,
-                   Repository repository,
+                   RepositoryApi repositoryApi,
                    RxUtils rxUtils
     ){
         super(app);
-        this.repository = repository;
+        this.repositoryApi = repositoryApi;
         this.rxUtils = rxUtils;
     }
 
@@ -35,7 +35,7 @@ public class LoginViewModel extends BaseViewModel {
     public void loginToServer(String user, String password) {
         if(!user.isEmpty() && !password.isEmpty()){
             RestApiFactory.updateCredentials(user, password);
-            disposables.add(rxUtils.baseCall(repository.getBooks())
+            disposables.add(rxUtils.baseCall(repositoryApi.getBooks())
                     .subscribe(
                             response -> {
                                 logMessage(resources.getString(R.string.login_success));
@@ -48,6 +48,7 @@ public class LoginViewModel extends BaseViewModel {
                             }));
         }else{
             passMessage(resources.getString(R.string.login_failure));
+            login.postValue("success");
         }
     }
 }
