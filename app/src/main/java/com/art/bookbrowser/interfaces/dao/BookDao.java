@@ -17,7 +17,7 @@ import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
 public interface BookDao {
 
     @Query("SELECT * FROM Book WHERE id LIKE :bookId")
-    Single<Book> getBook(long bookId);
+    Single<Book> getBook(String bookId);
 
     @Query("SELECT * FROM Book")
     Single<List<Book>> getBooks();

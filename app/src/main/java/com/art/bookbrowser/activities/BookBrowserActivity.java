@@ -127,7 +127,6 @@ public class BookBrowserActivity extends BaseActivity<BookBrowserViewModel> {
                 .of(this, baseViewModelFactory)
                 .get(BookBrowserViewModel.class);
         viewModel.getBooks().observe(this, books -> refreshUI(books));
-        viewModel.getBook().observe(this, book -> closeDialog());
         viewModel.getDeleteBook().observe(this, book -> bookListAdapter.deleteBook(book));
         viewModel.getPassMessage().observe(this, msg -> {
             if(msg.equals(getString(R.string.add_book_failure))){
@@ -135,6 +134,9 @@ public class BookBrowserActivity extends BaseActivity<BookBrowserViewModel> {
                         .ifPresent(addBookDialog1 ->
                                 addBookDialog.passErrorMessage(
                                         getResources().getString(R.string.add_book_failure)));
+            }
+            if(msg.equals(getString(R.string.add_book_success))){
+                closeDialog();
             }
         });
     }

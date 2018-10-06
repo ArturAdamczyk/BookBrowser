@@ -58,7 +58,6 @@ public class BookDetailsActivity extends BaseActivity<BookDetailsViewModel> {
 
     private void initViews(){
         bookDetailsTextViewDescription.setMovementMethod(new ScrollingMovementMethod());
-        setEmptyLayout();
     }
 
     private void getIntentParams() {
@@ -120,6 +119,11 @@ public class BookDetailsActivity extends BaseActivity<BookDetailsViewModel> {
                 .of(this, baseViewModelFactory)
                 .get(BookDetailsViewModel.class);
         viewModel.getBook().observe(this, book -> refreshUI());
+        viewModel.getPassMessage().observe(this, msg -> {
+            if(msg.equals(getString(R.string.book_details_fetch_failure))){
+                setEmptyLayout();
+            }
+        });
     }
 
 }

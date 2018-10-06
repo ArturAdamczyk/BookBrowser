@@ -7,12 +7,13 @@ import com.art.bookbrowser.App;
 import com.art.bookbrowser.db.AppDatabase;
 import com.art.bookbrowser.helpers.Messenger;
 import com.art.bookbrowser.helpers.RestApiFactory;
+import com.art.bookbrowser.helpers.RxUtils;
 import com.art.bookbrowser.helpers.SnackBarQueue;
-import com.art.bookbrowser.interfaces.Repository;
+import com.art.bookbrowser.interfaces.RepositoryApi;
 import com.art.bookbrowser.interfaces.dao.BookDao;
 import com.art.bookbrowser.interfaces.rest.RestApi;
 import com.art.bookbrowser.params.WebServiceConfiguration;
-import com.art.bookbrowser.repository.RepositoryImpl;
+import com.art.bookbrowser.repository.Repository;
 
 import javax.inject.Singleton;
 
@@ -51,8 +52,9 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public Repository provideRepository() {
-        return new RepositoryImpl();
+    public RepositoryApi provideRepository(BookDao bookDao, RestApi restApi, RxUtils rxUtils) {
+        return new Repository(bookDao, restApi, rxUtils);
+        //return new TestDataRepository();
     }
 
     @Provides
